@@ -17,13 +17,13 @@ public class MapEditor : MonoBehaviour
     public GameObject ground;
 
     private CellularAutomaton cellular = new CellularAutomaton();
-    void Start()
+    void Awake()
     {
         //生成初始随机地图
         map = cellular.CreateMap(mapWidth, mapLength, randomFillExpectation, thresholdToWall, involveCount);
     }
 
-    private void RenderMap(int[,] map)
+    private void RenderMapByGameObject(int[,] map)
     {
         Debug.Log($"mapParent.childCount:{mapParent.childCount}");
         //后期用对象池修改
@@ -45,23 +45,45 @@ public class MapEditor : MonoBehaviour
         }
     }
 
+    private void RenderMapByGizmos(int[,] map)
+    {
+        //Debug.Log($"mapParent.childCount:{mapParent.childCount}");
+        //后期用对象池修改
+        for (int i = mapParent.childCount - 1; i >= 0; i--)
+        {
+            Destroy(mapParent.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < map.GetLength(0); i++)
+        {
+            for (int j = 0; j < map.GetLength(1); j++)
+            {
+                Gizmos.color = map[i, j] == 0 ? Color.white : Color.black;
+                Gizmos.DrawCube(new Vector3(i, j), Vector3.one);
+            }
+        }
+    }
+
     public void OnClickCreate()
     {
-        //渲染
-        RenderMap(map);
+
     }
 
     public void OnClickEvolve()
     {
-        //演变
-        this.map = cellular.EvolveMap();
-        RenderMap(map);
+
     }
 
     public void OnClickEvolveOnce()
     {
-        //演变
-        this.map = cellular.EvolveMapOnce();
-        RenderMap(map);
+
+    }
+
+    private void OnDrawGizmos()
+    {
+        RenderMapByGizmos(map);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
     }
 }
