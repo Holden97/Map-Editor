@@ -53,17 +53,16 @@
     <UnityVersion>2020.3.24f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\CellularAutomaton.cs" />
-    <Compile Include="Assets\Scripts\MapEditor.cs" />
-<<<<<<< Updated upstream
-    <Compile Include="Assets\Scripts\GUI\TestUI.cs" />
-    <Compile Include="Assets\Scripts\GUI\Person.cs" />
-=======
     <Compile Include="Assets\Scripts\FooAttribute.cs" />
     <Compile Include="Assets\Scripts\FooBehaviour.cs" />
+    <Compile Include="Assets\Scripts\GUI\TestUI.cs" />
+    <Compile Include="Assets\Scripts\GUI\Person.cs" />
     <Compile Include="Assets\Scripts\BarBehaviour.cs" />
     <Compile Include="Assets\Scripts\FooBarBehaviour.cs" />
->>>>>>> Stashed changes
+    <Compile Include="Assets\Scripts\CellularAutomaton.cs" />
+    <Compile Include="Assets\Scripts\MapEditor.cs" />
+    <Compile Include="Assets\Scripts\TestOrder.cs" />
+    <Compile Include="Assets\Scripts\AnimalTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\MapSurfaceShader.shader" />

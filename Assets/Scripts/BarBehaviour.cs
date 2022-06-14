@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Foo]
 
 public class BarBehaviour : MonoBehaviour
 {
