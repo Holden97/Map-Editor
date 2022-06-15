@@ -8,6 +8,7 @@ public class SquareGrid
 
     List<Vector3> vertexes = new List<Vector3>();
     List<int> triangles = new List<int>();
+    Dictionary<int,List<Triangle>> trianglesDictionary = new Dictionary<int,List<Triangle>>();
     public SquareGrid(int[,] map, float squareSize)
     {
         int nodeCountX = map.GetLength(0);
@@ -106,7 +107,7 @@ public class SquareGrid
     /// <param name="points"></param>
     public void Mesh4Points(params Node[] points)
     {
-        AssignVertexIndex(points);
+        InitVertices(points);
 
         if (points.Length >= 3)
         {
@@ -126,13 +127,15 @@ public class SquareGrid
         }
     }
 
-    public void AssignVertexIndex(Node[] points)
+    public void InitVertices(Node[] points)
     {
         for (int i = 0; i < points.Length; i++)
         {
             if (points[i].vertexIndex == -1)//default
             {
+                //编号
                 points[i].vertexIndex = vertexes.Count;
+                //加入List
                 vertexes.Add(points[i].pos);
             }
         }
@@ -143,5 +146,27 @@ public class SquareGrid
         triangles.Add(a.vertexIndex);
         triangles.Add(b.vertexIndex);
         triangles.Add(c.vertexIndex);
+
+        Triangle triangle = new Triangle(a.vertexIndex,b.vertexIndex,c.vertexIndex);
+
+        AddTriangle2Dictionary(a.vertexIndex, triangle);
+        AddTriangle2Dictionary(b.vertexIndex, triangle);
+        AddTriangle2Dictionary(c.vertexIndex, triangle);
+    }
+
+    public void AddTriangle2Dictionary(int vertexIndex, Triangle triangle)
+    {
+        if (trianglesDictionary.ContainsKey(vertexIndex))
+        {
+            if (!trianglesDictionary[vertexIndex].Contains(triangle))
+            {
+                trianglesDictionary[vertexIndex].Add(triangle);
+            }
+        }
+        else
+        {
+            trianglesDictionary.Add(vertexIndex, new List<Triangle> { triangle });
+        }
+
     }
 }
