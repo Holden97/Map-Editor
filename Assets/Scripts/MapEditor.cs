@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class MapEditor : MonoBehaviour
 {
-    public const int mapLength = 50;
-    public const int mapWidth = 50;
+    public const int mapLength = 10;
+    public const int mapWidth = 10;
     public int randomFillExpectation = 50;
     public int thresholdToWall = 4;
     public int involveCount = 3;
@@ -80,10 +80,30 @@ public class MapEditor : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        RenderMapByGizmos(map);
-    }
+        var squareGrid = new SquareGrid(map, 1);
 
-    private void OnDrawGizmosSelected()
-    {
+        if (squareGrid != null)
+        {
+            for (int i = 0; i < squareGrid.squares.GetLength(0); i++)
+            {
+                for (int j = 0; j < squareGrid.squares.GetLength(1); j++)
+                {
+                    Gizmos.color = (squareGrid.squares[i, j].topLeft.active) ? Color.black : Color.white;
+                    Gizmos.DrawCube(squareGrid.squares[i, j].topLeft.pos, Vector3.one * 0.4f);
+                    Gizmos.color = (squareGrid.squares[i, j].topRight.active) ? Color.black : Color.white;
+                    Gizmos.DrawCube(squareGrid.squares[i, j].topRight.pos, Vector3.one * 0.4f);
+                    Gizmos.color = (squareGrid.squares[i, j].bottomLeft.active) ? Color.black : Color.white;
+                    Gizmos.DrawCube(squareGrid.squares[i, j].bottomLeft.pos, Vector3.one * 0.4f);
+                    Gizmos.color = (squareGrid.squares[i, j].bottomRight.active) ? Color.black : Color.white;
+                    Gizmos.DrawCube(squareGrid.squares[i, j].bottomRight.pos, Vector3.one * 0.4f);
+
+                    Gizmos.color = Color.gray;
+                    Gizmos.DrawCube(squareGrid.squares[i, j].centerTop.pos, Vector3.one * 0.15f);
+                    Gizmos.DrawCube(squareGrid.squares[i, j].centerBottom.pos, Vector3.one * 0.15f);
+                    Gizmos.DrawCube(squareGrid.squares[i, j].centerLeft.pos, Vector3.one * 0.15f);
+                    Gizmos.DrawCube(squareGrid.squares[i, j].centerRight.pos, Vector3.one * 0.15f);
+                }
+            }
+        }
     }
 }

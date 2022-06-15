@@ -53,10 +53,14 @@
     <UnityVersion>2020.3.24f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\CellularAutomaton.cs" />
-    <Compile Include="Assets\Scripts\MapEditor.cs" />
     <Compile Include="Assets\Scripts\GUI\TestUI.cs" />
     <Compile Include="Assets\Scripts\GUI\Person.cs" />
+    <Compile Include="Assets\Scripts\MapNode\Node.cs" />
+    <Compile Include="Assets\Scripts\MapNode\ControlNode.cs" />
+    <Compile Include="Assets\Scripts\CellularAutomaton.cs" />
+    <Compile Include="Assets\Scripts\MapNode\Square.cs" />
+    <Compile Include="Assets\Scripts\MapEditor.cs" />
+    <Compile Include="Assets\Scripts\MapNode\SquareGrid.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\MapSurfaceShader.shader" />
