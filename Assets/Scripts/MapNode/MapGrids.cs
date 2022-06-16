@@ -226,7 +226,7 @@ public class MapGrids
                 var nextVertice = curTriangles[i].vertices[(j + 1) % 3];
                 if (IsOutlineEdge(vertexIndex, nextVertice) && !checkedVertices.Contains(nextVertice))
                 {
-                    //checkedVertices.Add(nextVertice);
+                    checkedVertices.Add(nextVertice);
                     return nextVertice;
                 }
             }
@@ -234,4 +234,21 @@ public class MapGrids
         return -1;
     }
 
+    public void CalculateMeshOutlines()
+    {
+        for (int curIndex = 0; curIndex < vertexes.Count; curIndex++)
+        {
+            if (!checkedVertices.Contains(curIndex))
+            {
+                int nextVertex = GetConnectedOutlineVertex(curIndex);
+                if (nextVertex != -1)
+                {
+                    List<int> outline = new List<int>();
+                    outline.Add(curIndex);
+                    outline.Add(nextVertex);
+                    outlines.Add(outline);
+                }
+            }
+        }
+    }
 }
