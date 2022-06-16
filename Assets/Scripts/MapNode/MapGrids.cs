@@ -11,8 +11,8 @@ public class MapGrids
     List<int> triangles = new List<int>();
     Dictionary<int, List<Triangle>> trianglesDictionary = new Dictionary<int, List<Triangle>>();
 
-    List<List<int>> outlines= new List<List<int>>();
-    HashSet<int> checkedVertices=new HashSet<int>();
+    List<List<int>> outlines = new List<List<int>>();
+    HashSet<int> checkedVertices = new HashSet<int>();
     public MapGrids(int[,] map, float squareSize)
     {
         int nodeCountX = map.GetLength(0);
@@ -20,14 +20,27 @@ public class MapGrids
         float mapWidth = nodeCountX * squareSize;
         float mapHeight = nodeCountY * squareSize;
 
-        ControlNode[,] controlNodes = new ControlNode[nodeCountX, nodeCountY];
+        Vertice[,] controlNodes = new Vertice[nodeCountX, nodeCountY];
         for (int i = 0; i < nodeCountX; i++)
         {
             for (int j = 0; j < nodeCountY; j++)
             {
                 //这里+squareSize/2是为了保证整张图的中点始终在原点
                 Vector3 pos = new Vector3(-mapWidth / 2 + i * squareSize + squareSize / 2, 0, -mapHeight / 2 + j * squareSize + squareSize / 2);
-                controlNodes[i, j] = new ControlNode(pos, map[i, j] == 1, squareSize);
+                GridType type;
+                switch (map[i, j])
+                {
+                    case 0:
+                        type = GridType.GROUND;
+                        break;
+                    case 1:
+                        type = GridType.WALL;
+                        break;
+                    default:
+                        type = GridType.UNKNOWN;
+                        break;
+                }
+                controlNodes[i, j] = new Vertice(pos, type, squareSize);
             }
         }
         squares = new Square[nodeCountX - 1, nodeCountY - 1];
@@ -220,4 +233,5 @@ public class MapGrids
         }
         return -1;
     }
+
 }

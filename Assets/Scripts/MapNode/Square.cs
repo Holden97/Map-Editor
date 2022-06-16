@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class Square
 {
-    public ControlNode topLeft, topRight, bottomLeft, bottomRight;
+    public Vertice topLeft, topRight, bottomLeft, bottomRight;
     public Node centerLeft, centerRight, centerTop, centerBottom;
     public int configuration;
 
-    public Square(ControlNode topLeft, ControlNode topRight, ControlNode bottomLeft, ControlNode bottomRight)
+    public Square(Vertice topLeft, Vertice topRight, Vertice bottomLeft, Vertice bottomRight)
     {
         configuration = 0;
 
@@ -21,19 +21,19 @@ public class Square
         this.centerRight = bottomRight.above;
         this.centerTop = topLeft.right;
         this.centerBottom = bottomLeft.right;
-        if (topLeft.active)
+        if (topLeft.IsWall)
         {
             configuration += 8;
         }
-        if (topRight.active)
+        if (topRight.IsWall)
         {
             configuration += 4;
         }
-        if (bottomRight.active)
+        if (bottomRight.IsWall)
         {
             configuration += 2;
         }
-        if (bottomLeft.active)
+        if (bottomLeft.IsWall)
         {
             configuration += 1;
         }

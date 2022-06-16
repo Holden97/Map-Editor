@@ -88,13 +88,13 @@ public class MapEditor : MonoBehaviour
             {
                 for (int j = 0; j < squareGrid.squares.GetLength(1); j++)
                 {
-                    Gizmos.color = (squareGrid.squares[i, j].topLeft.active) ? Color.black : Color.white;
+                    Gizmos.color = (squareGrid.squares[i, j].topLeft.IsWall) ? Color.black : Color.white;
                     Gizmos.DrawCube(squareGrid.squares[i, j].topLeft.pos, Vector3.one * 0.4f);
-                    Gizmos.color = (squareGrid.squares[i, j].topRight.active) ? Color.black : Color.white;
+                    Gizmos.color = (squareGrid.squares[i, j].topRight.IsWall) ? Color.black : Color.white;
                     Gizmos.DrawCube(squareGrid.squares[i, j].topRight.pos, Vector3.one * 0.4f);
-                    Gizmos.color = (squareGrid.squares[i, j].bottomLeft.active) ? Color.black : Color.white;
+                    Gizmos.color = (squareGrid.squares[i, j].bottomLeft.IsWall) ? Color.black : Color.white;
                     Gizmos.DrawCube(squareGrid.squares[i, j].bottomLeft.pos, Vector3.one * 0.4f);
-                    Gizmos.color = (squareGrid.squares[i, j].bottomRight.active) ? Color.black : Color.white;
+                    Gizmos.color = (squareGrid.squares[i, j].bottomRight.IsWall) ? Color.black : Color.white;
                     Gizmos.DrawCube(squareGrid.squares[i, j].bottomRight.pos, Vector3.one * 0.4f);
 
                     Gizmos.color = Color.gray;

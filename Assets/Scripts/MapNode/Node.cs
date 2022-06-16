@@ -10,3 +10,19 @@ public class Node
         this.pos = pos;
     }
 }
+
+public enum GridType
+{
+    /// <summary>
+    /// �յ�
+    /// </summary>
+    GROUND = 0,
+    /// <summary>
+    /// ǽ
+    /// </summary>
+    WALL = 1,
+    /// <summary>
+    /// δ֪
+    /// </summary>
+    UNKNOWN=-1,
+}
