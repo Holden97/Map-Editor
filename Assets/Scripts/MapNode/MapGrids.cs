@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SquareGrid
+public class MapGrids
+
 {
     public Square[,] squares;
 
     List<Vector3> vertexes = new List<Vector3>();
     List<int> triangles = new List<int>();
-    Dictionary<int,List<Triangle>> trianglesDictionary = new Dictionary<int,List<Triangle>>();
-    public SquareGrid(int[,] map, float squareSize)
+    Dictionary<int, List<Triangle>> trianglesDictionary = new Dictionary<int, List<Triangle>>();
+
+    List<List<int>> outlines= new List<List<int>>();
+    HashSet<int> checkedVertices=new HashSet<int>();
+    public MapGrids(int[,] map, float squareSize)
     {
         int nodeCountX = map.GetLength(0);
         int nodeCountY = map.GetLength(1);
@@ -147,7 +151,7 @@ public class SquareGrid
         triangles.Add(b.vertexIndex);
         triangles.Add(c.vertexIndex);
 
-        Triangle triangle = new Triangle(a.vertexIndex,b.vertexIndex,c.vertexIndex);
+        Triangle triangle = new Triangle(a.vertexIndex, b.vertexIndex, c.vertexIndex);
 
         AddTriangle2Dictionary(a.vertexIndex, triangle);
         AddTriangle2Dictionary(b.vertexIndex, triangle);
@@ -167,6 +171,53 @@ public class SquareGrid
         {
             trianglesDictionary.Add(vertexIndex, new List<Triangle> { triangle });
         }
+    }
 
+    /// <summary>
+    /// 是否是轮廓边
+    /// </summary>
+    /// <param name="vertexA"></param>
+    /// <param name="vertexB"></param>
+    /// <returns></returns>
+    public bool IsOutlineEdge(int vertexA, int vertexB)
+    {
+        List<Triangle> triA = trianglesDictionary[vertexA];
+        int shareTriangleCount = 0;
+        for (int i = 0; i < triA.Count; i++)
+        {
+            var curTri = triA[i];
+            if (curTri.Contains(vertexB))
+            {
+                shareTriangleCount++;
+            }
+            if (shareTriangleCount > 1)
+            {
+                return false;
+            }
+        }
+        return shareTriangleCount == 1;
+    }
+
+    /// <summary>
+    /// 寻找下一个可以成为轮廓的顶点
+    /// </summary>
+    /// <param name="vertexIndex">当前顶点index</param>
+    /// <returns>下一个顶点index</returns>
+    public int GetConnectedOutlineVertex(int vertexIndex)
+    {
+        List<Triangle> curTriangles = trianglesDictionary[vertexIndex];
+        for (int i = 0; i < curTriangles.Count; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                var nextVertice = curTriangles[i].vertices[(j + 1) % 3];
+                if (IsOutlineEdge(vertexIndex, nextVertice) && !checkedVertices.Contains(nextVertice))
+                {
+                    //checkedVertices.Add(nextVertice);
+                    return nextVertice;
+                }
+            }
+        }
+        return -1;
     }
 }

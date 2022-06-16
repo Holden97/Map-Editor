@@ -80,7 +80,7 @@ public class MapEditor : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        var squareGrid = new SquareGrid(map, 1);
+        var squareGrid = new MapGrids(map, 1);
 
         if (squareGrid != null)
         {
