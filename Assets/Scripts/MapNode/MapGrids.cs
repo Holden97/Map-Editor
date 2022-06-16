@@ -7,8 +7,8 @@ public class MapGrids
 {
     public Square[,] squares;
 
-    List<Vector3> vertexes = new List<Vector3>();
-    List<int> triangles = new List<int>();
+    public List<Vector3> vertexes = new List<Vector3>();
+    public List<int> triangles = new List<int>();
     Dictionary<int, List<Triangle>> trianglesDictionary = new Dictionary<int, List<Triangle>>();
 
     List<List<int>> outlines = new List<List<int>>();
@@ -238,17 +238,70 @@ public class MapGrids
     {
         for (int curIndex = 0; curIndex < vertexes.Count; curIndex++)
         {
-            if (!checkedVertices.Contains(curIndex))
+            var outline = CalculateMeshOutLine(curIndex);
+            if (outline.Count > 0)
             {
-                int nextVertex = GetConnectedOutlineVertex(curIndex);
-                if (nextVertex != -1)
-                {
-                    List<int> outline = new List<int>();
-                    outline.Add(curIndex);
-                    outline.Add(nextVertex);
-                    outlines.Add(outline);
-                }
+                outlines.Add(outline);
             }
         }
+    }
+
+    public List<int> CalculateMeshOutLine(int vertexIndex)
+    {
+        var result = new List<int>();
+        var curVertex = vertexIndex;
+        var originalVertex = vertexIndex;
+        while (!checkedVertices.Contains(curVertex))
+        {
+            int nextVertex = GetConnectedOutlineVertex(curVertex);
+            if (nextVertex != -1)
+            {
+                result.Add(nextVertex);
+                checkedVertices.Add(curVertex);
+                curVertex = nextVertex;
+            }
+            else
+            {
+                result.Add(originalVertex);
+                break;
+            }
+        }
+        return result;
+    }
+
+    public void CreateWallMesh()
+    {
+        List<Vector3> wallVertices = new List<Vector3>();
+        List<int> wallTriangles = new List<int>();
+        Mesh wallMesh = new Mesh();
+        float wallHeight = 5;
+        for (int i = 0; i < outlines.Count; i++)
+        {
+            for (int j = 0; j < outlines[i].Count - 1; j++)
+            {
+                int startIndex = wallVertices.Count;
+                wallVertices.Add(vertexes[outlines[i][j]]);
+                wallVertices.Add(vertexes[outlines[i][j + 1]]);
+                wallVertices.Add(vertexes[outlines[i][j]] - Vector3.up * wallHeight);
+                wallVertices.Add(vertexes[outlines[i][j + 1]] - Vector3.up * wallHeight);
+
+                wallTriangles.Add(startIndex + 0);
+                wallTriangles.Add(startIndex + 2);
+                wallTriangles.Add(startIndex + 3);
+
+                wallTriangles.Add(startIndex + 3);
+                wallTriangles.Add(startIndex + 1);
+                wallTriangles.Add(startIndex + 0);
+            }
+        }
+        wallMesh.vertices = wallVertices.ToArray();
+        wallMesh.triangles = wallTriangles.ToArray();
+    }
+
+    public void Clear()
+    {
+        outlines.Clear();
+        checkedVertices.Clear();
+        trianglesDictionary.Clear();
     }
 }

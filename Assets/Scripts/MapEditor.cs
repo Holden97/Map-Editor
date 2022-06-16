@@ -106,4 +106,25 @@ public class MapEditor : MonoBehaviour
             }
         }
     }
+
+    public void GenerateMesh(int[,] map, float squareSize)
+    {
+        //Clear();
+
+        var squareGrid = new MapGrids(map, squareSize);
+        for (int i = 0; i < squareGrid.squares.GetLength(0); i++)
+        {
+            for (int j = 0; j < squareGrid.squares.GetLength(1); j++)
+            {
+                squareGrid.TriangulateSquare(squareGrid.squares[i, j]);
+            }
+        }
+        Mesh mesh = new Mesh();
+        GetComponent<MeshFilter>().mesh = mesh;
+        mesh.vertices = squareGrid.vertexes.ToArray();
+        mesh.triangles = squareGrid.triangles.ToArray();
+        mesh.RecalculateNormals();
+
+        squareGrid.CreateWallMesh();
+    }
 }
