@@ -105,13 +105,17 @@ public class MapEditor : MonoBehaviour
                 }
             }
         }
+
+        GenerateMesh(map, 1);
     }
 
     public void GenerateMesh(int[,] map, float squareSize)
     {
-        //Clear();
 
         var squareGrid = new MapGrids(map, squareSize);
+
+        squareGrid.Clear();
+
         for (int i = 0; i < squareGrid.squares.GetLength(0); i++)
         {
             for (int j = 0; j < squareGrid.squares.GetLength(1); j++)
@@ -119,6 +123,7 @@ public class MapEditor : MonoBehaviour
                 squareGrid.TriangulateSquare(squareGrid.squares[i, j]);
             }
         }
+
         Mesh mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
         mesh.vertices = squareGrid.vertexes.ToArray();
