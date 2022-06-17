@@ -269,7 +269,7 @@ public class MapGrids
         return result;
     }
 
-    public void CreateWallMesh()
+    public void CreateWallMesh(MeshFilter meshFilter)
     {
         List<Vector3> wallVertices = new List<Vector3>();
         List<int> wallTriangles = new List<int>();
@@ -296,6 +296,8 @@ public class MapGrids
         }
         wallMesh.vertices = wallVertices.ToArray();
         wallMesh.triangles = wallTriangles.ToArray();
+        wallMesh.RecalculateNormals();
+        meshFilter.mesh = wallMesh;
     }
 
     public void Clear()

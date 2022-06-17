@@ -13,6 +13,11 @@ public class MapEditor : MonoBehaviour
     public int[,] map = new int[mapLength, mapWidth];
     public Transform mapParent;
 
+    /// <summary>
+    /// 墙壁mesh
+    /// </summary>
+    public MeshFilter walls;
+
     public GameObject wall;
     public GameObject ground;
 
@@ -130,6 +135,6 @@ public class MapEditor : MonoBehaviour
         mesh.triangles = squareGrid.triangles.ToArray();
         mesh.RecalculateNormals();
 
-        squareGrid.CreateWallMesh();
+        squareGrid.CreateWallMesh(walls);
     }
 }
