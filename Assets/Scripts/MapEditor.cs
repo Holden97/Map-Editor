@@ -1,6 +1,7 @@
 //Author：GuoYiBo
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class MapEditor : MonoBehaviour
@@ -17,6 +18,10 @@ public class MapEditor : MonoBehaviour
     /// 墙壁mesh
     /// </summary>
     public MeshFilter walls;
+    /// <summary>
+    /// 墙壁顶mesh
+    /// </summary>
+    public MeshFilter topMesh;
 
     public GameObject wall;
     public GameObject ground;
@@ -95,6 +100,7 @@ public class MapEditor : MonoBehaviour
                 {
                     Gizmos.color = (squareGrid.squares[i, j].topLeft.IsWall) ? Color.black : Color.white;
                     Gizmos.DrawCube(squareGrid.squares[i, j].topLeft.pos, Vector3.one * 0.4f);
+
                     Gizmos.color = (squareGrid.squares[i, j].topRight.IsWall) ? Color.black : Color.white;
                     Gizmos.DrawCube(squareGrid.squares[i, j].topRight.pos, Vector3.one * 0.4f);
                     Gizmos.color = (squareGrid.squares[i, j].bottomLeft.IsWall) ? Color.black : Color.white;
@@ -136,5 +142,19 @@ public class MapEditor : MonoBehaviour
         mesh.RecalculateNormals();
 
         squareGrid.CreateWallMesh(walls);
+
+        List<Vector3> topVertices = new List<Vector3>();
+
+        for (int i = 0; i < squareGrid.vertexes.Count; i++)
+        {
+            topVertices.Add(squareGrid.vertexes[i] + Vector3.up * MapGrids.wallHeight);
+        }
+
+        Mesh mesh2 = new Mesh();
+        topMesh.mesh = mesh2;
+        mesh2.vertices = topVertices.ToArray();
+        mesh2.triangles = squareGrid.triangles.ToArray();
+        mesh2.RecalculateNormals();
+
     }
 }

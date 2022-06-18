@@ -7,6 +7,8 @@ public class MapGrids
 {
     public Square[,] squares;
 
+    public static float wallHeight=1;
+
     public List<Vector3> vertexes = new List<Vector3>();
     public List<int> triangles = new List<int>();
     Dictionary<int, List<Triangle>> trianglesDictionary = new Dictionary<int, List<Triangle>>();
@@ -226,7 +228,6 @@ public class MapGrids
                 var nextVertice = curTriangles[i].vertices[(j + 1) % 3];
                 if (IsOutlineEdge(vertexIndex, nextVertice) && !checkedVertices.Contains(nextVertice))
                 {
-                    checkedVertices.Add(nextVertice);
                     return nextVertice;
                 }
             }
@@ -251,6 +252,8 @@ public class MapGrids
         var result = new List<int>();
         var curVertex = vertexIndex;
         var originalVertex = vertexIndex;
+        //添加起始点
+        result.Add(curVertex);
         while (!checkedVertices.Contains(curVertex))
         {
             int nextVertex = GetConnectedOutlineVertex(curVertex);
@@ -271,10 +274,12 @@ public class MapGrids
 
     public void CreateWallMesh(MeshFilter meshFilter)
     {
+        CalculateMeshOutlines();
+
         List<Vector3> wallVertices = new List<Vector3>();
         List<int> wallTriangles = new List<int>();
         Mesh wallMesh = new Mesh();
-        float wallHeight = 5;
+        Debug.Log($"walls' outlines count:{outlines.Count}");
         for (int i = 0; i < outlines.Count; i++)
         {
             for (int j = 0; j < outlines[i].Count - 1; j++)
@@ -282,8 +287,8 @@ public class MapGrids
                 int startIndex = wallVertices.Count;
                 wallVertices.Add(vertexes[outlines[i][j]]);
                 wallVertices.Add(vertexes[outlines[i][j + 1]]);
-                wallVertices.Add(vertexes[outlines[i][j]] - Vector3.up * wallHeight);
-                wallVertices.Add(vertexes[outlines[i][j + 1]] - Vector3.up * wallHeight);
+                wallVertices.Add(vertexes[outlines[i][j]] + Vector3.up * wallHeight);
+                wallVertices.Add(vertexes[outlines[i][j + 1]] + Vector3.up * wallHeight);
 
                 wallTriangles.Add(startIndex + 0);
                 wallTriangles.Add(startIndex + 2);
