@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\AnimalTest.cs" />
     <Compile Include="Assets\Scripts\MapEditor.cs" />
     <Compile Include="Assets\Scripts\MapNode\Triangle.cs" />
+    <Compile Include="Assets\Scripts\StudyMesh\CubeMesh.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\MapSurfaceShader.shader" />
