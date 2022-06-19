@@ -3,20 +3,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class CubeMesh : MonoBehaviour
 {
-    private int length = 3;
-    private int width = 3;
-    private int height = 3;
+    /// <summary>
+    /// 长度顶点数量
+    /// </summary>
+    private int length = 4;
+    /// <summary>
+    /// 宽度顶点数量
+    /// </summary>
+    private int width = 4;
+    /// <summary>
+    /// 高度顶点数量
+    /// </summary>
+    private int height = 6;
 
     private int totalVerticesCount;
     private Vector3[] vertices;
     private int curVertexIndex = 0;
 
-    private Mesh mesh;
+    private int[] triangleVerticeIndex;
+
+    private Mesh curMesh;
 
     private void Awake()
     {
+        curMesh = new Mesh();
+
         int cornerVerticesCount = 8;
         int edgeVerticesCount = ((length - 1) + (width - 1) + (height - 1)) * 4;
         int planesCount = ((height - 1) * (width - 1) + (height - 1) * (length - 1) + (length - 1) * (width - 1)) * 2;
@@ -24,11 +39,12 @@ public class CubeMesh : MonoBehaviour
         totalVerticesCount = cornerVerticesCount + edgeVerticesCount + planesCount;
         vertices = new Vector3[totalVerticesCount];
 
-        var wait = new WaitForSeconds(0.1f);
-        StartCoroutine(CreateCube(wait));
+        CreateCube();
+
+        GetComponent<MeshFilter>().mesh = curMesh;
     }
 
-    private IEnumerator CreateCube(WaitForSeconds wait)
+    private void CreateCube()
     {
         //计算侧面顶点
         for (int i = 0; i < height; i++)
@@ -36,30 +52,55 @@ public class CubeMesh : MonoBehaviour
             for (int j = 0; j < length; j++)
             {
                 vertices[curVertexIndex++] = new Vector3(j, i, 0);
-                yield return wait;
             }
             for (int k = 0; k < width; k++)
             {
                 vertices[curVertexIndex++] = new Vector3(length - 1, i, k);
-                yield return wait;
             }
             for (int j = 0; j < length; j++)
             {
                 vertices[curVertexIndex++] = new Vector3(length - 1 - j, i, width - 1);
-                yield return wait;
             }
             for (int k = 0; k < width; k++)
             {
                 vertices[curVertexIndex++] = new Vector3(0, i, width - 1 - k);
-                yield return wait;
             }
         }
 
         //计算上面顶点
-        yield return VerticeOnHorizontalPlane(height - 1, curVertexIndex,wait);
+        VerticeOnHorizontalPlane(height - 1, curVertexIndex);
 
         //计算下面顶点
-        yield return VerticeOnHorizontalPlane(0, curVertexIndex, wait);
+        VerticeOnHorizontalPlane(0, curVertexIndex);
+
+        //计算三角形顶点数组元素个数
+        var squaresCount = (length * width + width * height + height * length) * 2;
+        var totalTriangleVerticesCount = 6 * squaresCount;
+        triangleVerticeIndex = new int[totalTriangleVerticesCount];
+
+        //计算侧面三角形
+        var perimeter = (width + length) * 2;
+        var curTriangleIndexIndex = 0;
+        var curV = 0;
+        for (int j = 0; j < 3; j++,curV++)
+        {
+            for (int i = 0; i < perimeter; i++, curV++)
+            {
+                if (i < perimeter - 1)
+                {
+                    SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curV, curV + 1, curV + perimeter, curV + perimeter + 1);
+                }
+                else
+                {
+                    SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curV, curV - perimeter + 1, curV + perimeter, curV + 1);
+                }
+            }
+
+        }
+
+
+        curMesh.vertices = vertices;
+        curMesh.triangles = triangleVerticeIndex;
     }
 
     private void OnDrawGizmos()
@@ -77,16 +118,24 @@ public class CubeMesh : MonoBehaviour
     /// </summary>
     /// <param name="height">水平面高度</param>
     /// <param name="startIndex">开始Index</param>
-    private IEnumerator VerticeOnHorizontalPlane(int height, int startIndex,WaitForSeconds wait)
+    private void VerticeOnHorizontalPlane(int height, int startIndex)
     {
         for (int i = 1; i < width - 1; i++)
         {
             for (int j = 1; j < length - 1; j++)
             {
                 vertices[startIndex++] = new Vector3(j, height, i);
-                yield return wait;
             }
         }
         this.curVertexIndex = startIndex;
+    }
+
+    private void SquareCalculate(int[] triangle, ref int startIndex, int leftBottomVertex, int rightBottomVertex, int leftTopVertex, int rightTopVertex)
+    {
+        triangle[startIndex] = leftBottomVertex;
+        triangle[startIndex + 1] = triangle[startIndex + 4] = leftTopVertex;
+        triangle[startIndex + 2] = triangle[startIndex + 3] = rightBottomVertex;
+        triangle[startIndex + 5] = rightTopVertex;
+        startIndex += 6;
     }
 }
