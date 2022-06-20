@@ -10,11 +10,11 @@ public class CubeMesh : MonoBehaviour
     /// <summary>
     /// 长度顶点数量
     /// </summary>
-    private int length =3;
+    private int length = 7;
     /// <summary>
     /// 宽度顶点数量
     /// </summary>
-    private int width = 4;
+    private int width = 8;
     /// <summary>
     /// 高度顶点数量
     /// </summary>
@@ -59,7 +59,7 @@ public class CubeMesh : MonoBehaviour
             }
             for (int j = 1; j <= length; j++)
             {
-                vertices[curVertexIndex++] = new Vector3(length  - j, i, width);
+                vertices[curVertexIndex++] = new Vector3(length - j, i, width);
             }
             for (int k = 1; k < width; k++)
             {
@@ -99,6 +99,42 @@ public class CubeMesh : MonoBehaviour
         }
 
         //计算上面三角形
+
+        //第一行
+        curV = height * perimeter;
+        var curVTop = curV + perimeter - 1;
+
+        for (int i = 0; i < length - 1; i++, curV++, curVTop++)
+        {
+            SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curV, curV + 1, curVTop, curVTop + 1);
+        }
+        SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curV, curV + 1, curVTop, curV + 2);
+        //中间
+        curV += 2;
+        curVTop += 1;
+        for (int j = 1; j < width - 1; j++, curV++)
+        {
+            //左侧
+            var leftBottom = height * perimeter + perimeter - 1;
+            SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, leftBottom - j + 1, curVTop + 1 - length, leftBottom - j, curVTop);
+            //中间
+            for (int i = 0; i < length - 1; i++, curVTop++)
+            {
+                SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curVTop - length + 1, curVTop - length + 2, curVTop, curVTop + 1);
+            }
+            //右侧
+            SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curVTop - length, curV, curVTop - 1, curV + 1);
+        }
+        //最后一行
+        var lastOutlineAnchor = height * perimeter + perimeter - width + 1;
+        var lastInlineAnchor = curVTop + 1 - length;
+        SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, lastOutlineAnchor, lastInlineAnchor, lastOutlineAnchor - 1, lastOutlineAnchor - 2);
+        for (int i = 1; i < length - 1; i++, curV++, lastInlineAnchor++, lastOutlineAnchor--)
+        {
+            SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, lastInlineAnchor, lastInlineAnchor + 1, lastOutlineAnchor - 2, lastOutlineAnchor - 3);
+        }
+        SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, lastInlineAnchor, lastOutlineAnchor - 4, lastOutlineAnchor - 2, lastOutlineAnchor - 3);
+
         //计算下面三角形
 
 
@@ -123,7 +159,7 @@ public class CubeMesh : MonoBehaviour
     /// <param name="startIndex">开始Index</param>
     private void VerticeOnHorizontalPlane(int height, int startIndex)
     {
-        for (int i = 1; i < width ; i++)
+        for (int i = 1; i < width; i++)
         {
             for (int j = 1; j < length; j++)
             {
