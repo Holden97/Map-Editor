@@ -82,7 +82,7 @@ public class CubeMesh : MonoBehaviour
         var perimeter = (width + length) * 2;
         var curTriangleIndexIndex = 0;
         var curV = 0;
-        for (int j = 0; j < 3; j++,curV++)
+        for (int j = 0; j < height; j++)
         {
             for (int i = 0; i < perimeter; i++, curV++)
             {
