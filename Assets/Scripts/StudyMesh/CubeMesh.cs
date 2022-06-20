@@ -61,7 +61,7 @@ public class CubeMesh : MonoBehaviour
             {
                 vertices[curVertexIndex++] = new Vector3(length  - j, i, width);
             }
-            for (int k = 1; k <= width; k++)
+            for (int k = 1; k < width; k++)
             {
                 vertices[curVertexIndex++] = new Vector3(0, i, width - k);
             }
