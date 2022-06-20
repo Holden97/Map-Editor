@@ -10,15 +10,15 @@ public class CubeMesh : MonoBehaviour
     /// <summary>
     /// 长度顶点数量
     /// </summary>
-    private int length = 4;
+    private int length =2;
     /// <summary>
     /// 宽度顶点数量
     /// </summary>
-    private int width = 4;
+    private int width = 2;
     /// <summary>
     /// 高度顶点数量
     /// </summary>
-    private int height = 6;
+    private int height = 2;
 
     private int totalVerticesCount;
     private Vector3[] vertices;
@@ -47,28 +47,28 @@ public class CubeMesh : MonoBehaviour
     private void CreateCube()
     {
         //计算侧面顶点
-        for (int i = 0; i < height; i++)
+        for (int i = 0; i <= height; i++)
         {
-            for (int j = 0; j < length; j++)
+            for (int j = 0; j <= length; j++)
             {
                 vertices[curVertexIndex++] = new Vector3(j, i, 0);
             }
-            for (int k = 0; k < width; k++)
+            for (int k = 1; k <= width; k++)
             {
-                vertices[curVertexIndex++] = new Vector3(length - 1, i, k);
+                vertices[curVertexIndex++] = new Vector3(length, i, k);
             }
-            for (int j = 0; j < length; j++)
+            for (int j = 1; j <= length; j++)
             {
-                vertices[curVertexIndex++] = new Vector3(length - 1 - j, i, width - 1);
+                vertices[curVertexIndex++] = new Vector3(length  - j, i, width);
             }
-            for (int k = 0; k < width; k++)
+            for (int k = 1; k <= width; k++)
             {
-                vertices[curVertexIndex++] = new Vector3(0, i, width - 1 - k);
+                vertices[curVertexIndex++] = new Vector3(0, i, width - k);
             }
         }
 
         //计算上面顶点
-        VerticeOnHorizontalPlane(height - 1, curVertexIndex);
+        VerticeOnHorizontalPlane(height, curVertexIndex);
 
         //计算下面顶点
         VerticeOnHorizontalPlane(0, curVertexIndex);
