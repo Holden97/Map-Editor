@@ -10,15 +10,15 @@ public class CubeMesh : MonoBehaviour
     /// <summary>
     /// 长度顶点数量
     /// </summary>
-    private int length =2;
+    private int length =3;
     /// <summary>
     /// 宽度顶点数量
     /// </summary>
-    private int width = 2;
+    private int width = 4;
     /// <summary>
     /// 高度顶点数量
     /// </summary>
-    private int height = 2;
+    private int height = 5;
 
     private int totalVerticesCount;
     private Vector3[] vertices;
@@ -98,6 +98,9 @@ public class CubeMesh : MonoBehaviour
 
         }
 
+        //计算上面三角形
+        //计算下面三角形
+
 
         curMesh.vertices = vertices;
         curMesh.triangles = triangleVerticeIndex;
@@ -120,9 +123,9 @@ public class CubeMesh : MonoBehaviour
     /// <param name="startIndex">开始Index</param>
     private void VerticeOnHorizontalPlane(int height, int startIndex)
     {
-        for (int i = 1; i < width - 1; i++)
+        for (int i = 1; i < width ; i++)
         {
-            for (int j = 1; j < length - 1; j++)
+            for (int j = 1; j < length; j++)
             {
                 vertices[startIndex++] = new Vector3(j, height, i);
             }
