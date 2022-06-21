@@ -125,12 +125,16 @@ public class CubeMesh : MonoBehaviour
             var leftBottom = height * perimeter + perimeter - 1;
             SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, leftBottom - j + 1, curVTop + 1 - length, leftBottom - j, curVTop);
             //中间
-            for (int i = 0; i < length - 1; i++, curVTop++)
+            for (int i = 1; i < length - 1; i++, curVTop++)
             {
                 SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curVTop - length + 1, curVTop - length + 2, curVTop, curVTop + 1);
             }
+            curVTop++;
             //右侧
-            SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curVTop - length, curV, curVTop - 1, curV + 1);
+            if (length >= 2)
+            {
+                SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curVTop - length, curV, curVTop - 1, curV + 1);
+            }
         }
         //最后一行
         var lastOutlineAnchor = height * perimeter + perimeter - width + 1;
@@ -140,7 +144,10 @@ public class CubeMesh : MonoBehaviour
         {
             SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, lastInlineAnchor, lastInlineAnchor + 1, lastOutlineAnchor - 2, lastOutlineAnchor - 3);
         }
-        SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, lastInlineAnchor, lastOutlineAnchor - 4, lastOutlineAnchor - 2, lastOutlineAnchor - 3);
+        if (length >= 2)
+        {
+            SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, lastInlineAnchor, lastOutlineAnchor - 4, lastOutlineAnchor - 2, lastOutlineAnchor - 3);
+        }
 
         //计算下面三角形
 
