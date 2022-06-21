@@ -104,11 +104,18 @@ public class CubeMesh : MonoBehaviour
         curV = height * perimeter;
         var curVTop = curV + perimeter - 1;
 
-        for (int i = 0; i < length - 1; i++, curV++, curVTop++)
+        SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curV, curV + 1, curVTop, curVTop + 1);
+        curV++;
+        curVTop++;
+
+        for (int i = 1; i < length - 1; i++, curV++, curVTop++)
         {
             SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curV, curV + 1, curVTop, curVTop + 1);
         }
-        SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curV, curV + 1, curVTop, curV + 2);
+        if (length >= 2)
+        {
+            SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curV, curV + 1, curVTop, curV + 2);
+        }
         //中间
         curV += 2;
         curVTop += 1;
@@ -136,6 +143,41 @@ public class CubeMesh : MonoBehaviour
         SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, lastInlineAnchor, lastOutlineAnchor - 4, lastOutlineAnchor - 2, lastOutlineAnchor - 3);
 
         //计算下面三角形
+
+        ////第一行
+        //curV = height * perimeter;
+        //var curVTop = curV + perimeter - 1;
+
+        //for (int i = 0; i < length - 1; i++, curV++, curVTop++)
+        //{
+        //    SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curV, curV + 1, curVTop, curVTop + 1);
+        //}
+        //SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curV, curV + 1, curVTop, curV + 2);
+        ////中间
+        //curV += 2;
+        //curVTop += 1;
+        //for (int j = 1; j < width - 1; j++, curV++)
+        //{
+        //    //左侧
+        //    var leftBottom = height * perimeter + perimeter - 1;
+        //    SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, leftBottom - j + 1, curVTop + 1 - length, leftBottom - j, curVTop);
+        //    //中间
+        //    for (int i = 0; i < length - 1; i++, curVTop++)
+        //    {
+        //        SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curVTop - length + 1, curVTop - length + 2, curVTop, curVTop + 1);
+        //    }
+        //    //右侧
+        //    SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, curVTop - length, curV, curVTop - 1, curV + 1);
+        //}
+        ////最后一行
+        //var lastOutlineAnchor = height * perimeter + perimeter - width + 1;
+        //var lastInlineAnchor = curVTop + 1 - length;
+        //SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, lastOutlineAnchor, lastInlineAnchor, lastOutlineAnchor - 1, lastOutlineAnchor - 2);
+        //for (int i = 1; i < length - 1; i++, curV++, lastInlineAnchor++, lastOutlineAnchor--)
+        //{
+        //    SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, lastInlineAnchor, lastInlineAnchor + 1, lastOutlineAnchor - 2, lastOutlineAnchor - 3);
+        //}
+        //SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, lastInlineAnchor, lastOutlineAnchor - 4, lastOutlineAnchor - 2, lastOutlineAnchor - 3);
 
 
         curMesh.vertices = vertices;
