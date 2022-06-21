@@ -10,15 +10,15 @@ public class CubeMesh : MonoBehaviour
     /// <summary>
     /// 长度顶点数量
     /// </summary>
-    private int length = 7;
+    private int length = 3;
     /// <summary>
     /// 宽度顶点数量
     /// </summary>
-    private int width = 8;
+    private int width = 3;
     /// <summary>
     /// 高度顶点数量
     /// </summary>
-    private int height = 5;
+    private int height = 3;
 
     private int totalVerticesCount;
     private Vector3[] vertices;
@@ -169,7 +169,6 @@ public class CubeMesh : MonoBehaviour
         }
 
         //中间
-
         for (int j = 1; j < width - 1; j++, bottomOutlineEnd--, bottomOutlineStart++)
         {
             //左侧
@@ -181,20 +180,20 @@ public class CubeMesh : MonoBehaviour
                 SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, bottomInlineStart - length + 1, bottomInlineStart - length, bottomInlineStart, bottomInlineStart - 1);
             }
             //右侧
-            SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, bottomOutlineStart + 2, bottomInlineStart - length + 1, bottomOutlineStart + 3, bottomInlineStart);
-            //相同的三角形会被合并
-            //SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, 0, 0, 0, 0);
+            SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, bottomOutlineStart + 2, bottomInlineStart - length, bottomOutlineStart + 3, bottomInlineStart - 1);
         }
-        ////最后一行
-        //var lastOutlineAnchor = height * perimeter + perimeter - width + 1;
-        //var lastInlineAnchor = curVTop + 1 - length;
-        //SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, lastOutlineAnchor, lastInlineAnchor, lastOutlineAnchor - 1, lastOutlineAnchor - 2);
-        //for (int i = 1; i < length - 1; i++, curV++, lastInlineAnchor++, lastOutlineAnchor--)
-        //{
-        //    SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, lastInlineAnchor, lastInlineAnchor + 1, lastOutlineAnchor - 2, lastOutlineAnchor - 3);
-        //}
-        //SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, lastInlineAnchor, lastOutlineAnchor - 4, lastOutlineAnchor - 2, lastOutlineAnchor - 3);
-
+        //最后一行
+        if (width >= 2)
+        {
+            var bottomLastStart = bottomInlineStart - length + 1;
+            SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, bottomLastStart, bottomOutlineEnd, bottomOutlineEnd - 2, bottomOutlineEnd - 1);
+            bottomLastStart++;
+            for (int i = 1; i < length - 1; i++, bottomLastStart++, bottomOutlineEnd--)
+            {
+                SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, bottomLastStart, bottomLastStart-1, bottomOutlineEnd - 3, bottomOutlineEnd - 2);
+            }
+            SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, bottomOutlineEnd - 4, bottomLastStart - 1, bottomOutlineEnd - 3, bottomOutlineEnd - 2);
+        }
 
         curMesh.vertices = vertices;
         curMesh.triangles = triangleVerticeIndex;
