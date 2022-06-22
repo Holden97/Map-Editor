@@ -8,20 +8,24 @@ using UnityEngine;
 public class CubeMesh : MonoBehaviour
 {
     /// <summary>
-    /// 长度顶点数量
+    /// 长度顶点数量 >=2
     /// </summary>
-    private int length = 3;
+    public int length = 3;
     /// <summary>
-    /// 宽度顶点数量
+    /// 宽度顶点数量 >=2
     /// </summary>
-    private int width = 3;
+    public int width = 3;
     /// <summary>
-    /// 高度顶点数量
+    /// 高度顶点数量 >=2
     /// </summary>
-    private int height = 3;
+    public int height = 3;
+
+    public int smoothDegree = 2;
 
     private int totalVerticesCount;
     private Vector3[] vertices;
+    private Vector3[] normals;
+
     private int curVertexIndex = 0;
 
     private int[] triangleVerticeIndex;
@@ -38,10 +42,48 @@ public class CubeMesh : MonoBehaviour
 
         totalVerticesCount = cornerVerticesCount + edgeVerticesCount + planesCount;
         vertices = new Vector3[totalVerticesCount];
+        normals = new Vector3[totalVerticesCount];
 
         CreateCube();
 
         GetComponent<MeshFilter>().mesh = curMesh;
+    }
+
+    private void SetVertex(ref int curVertexIndex, float x, float y, float z)
+    {
+        var inner = vertices[curVertexIndex] = new Vector3(x, y, z);
+        if (x < smoothDegree)
+        {
+            inner.x = smoothDegree;
+        }
+        else if (x + smoothDegree > length)
+        {
+            inner.x = length - smoothDegree;
+        }
+
+        if (y < smoothDegree)
+        {
+            inner.y = smoothDegree;
+        }
+        else if (y + smoothDegree > height)
+        {
+            inner.y = height - smoothDegree;
+        }
+
+        if (z < smoothDegree)
+        {
+            inner.z = smoothDegree;
+        }
+        else if (z + smoothDegree > width)
+        {
+            inner.z = width - smoothDegree;
+        }
+
+        normals[curVertexIndex] = (vertices[curVertexIndex] - inner).normalized;
+
+        vertices[curVertexIndex] = normals[curVertexIndex] * smoothDegree + inner;
+
+        curVertexIndex++;
     }
 
     private void CreateCube()
@@ -51,19 +93,19 @@ public class CubeMesh : MonoBehaviour
         {
             for (int j = 0; j <= length; j++)
             {
-                vertices[curVertexIndex++] = new Vector3(j, i, 0);
+                SetVertex(ref curVertexIndex, j, i, 0);
             }
             for (int k = 1; k <= width; k++)
             {
-                vertices[curVertexIndex++] = new Vector3(length, i, k);
+                SetVertex(ref curVertexIndex, length, i, k);
             }
             for (int j = 1; j <= length; j++)
             {
-                vertices[curVertexIndex++] = new Vector3(length - j, i, width);
+                SetVertex(ref curVertexIndex, length - j, i, width);
             }
             for (int k = 1; k < width; k++)
             {
-                vertices[curVertexIndex++] = new Vector3(0, i, width - k);
+                SetVertex(ref curVertexIndex, 0, i, width - k);
             }
         }
 
@@ -190,7 +232,7 @@ public class CubeMesh : MonoBehaviour
             bottomLastStart++;
             for (int i = 1; i < length - 1; i++, bottomLastStart++, bottomOutlineEnd--)
             {
-                SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, bottomLastStart, bottomLastStart-1, bottomOutlineEnd - 3, bottomOutlineEnd - 2);
+                SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, bottomLastStart, bottomLastStart - 1, bottomOutlineEnd - 3, bottomOutlineEnd - 2);
             }
             SquareCalculate(triangleVerticeIndex, ref curTriangleIndexIndex, bottomOutlineEnd - 4, bottomLastStart - 1, bottomOutlineEnd - 3, bottomOutlineEnd - 2);
         }
@@ -202,10 +244,12 @@ public class CubeMesh : MonoBehaviour
     private void OnDrawGizmos()
     {
         if (vertices == null) return;
-        Gizmos.color = Color.black;
         for (int i = 0; i < totalVerticesCount; i++)
         {
+            Gizmos.color = Color.black;
             Gizmos.DrawSphere(vertices[i], 0.2f);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawRay(vertices[i], normals[i]);
         }
     }
 
@@ -220,7 +264,7 @@ public class CubeMesh : MonoBehaviour
         {
             for (int j = 1; j < length; j++)
             {
-                vertices[startIndex++] = new Vector3(j, height, i);
+                SetVertex(ref startIndex, j, height, i);
             }
         }
         this.curVertexIndex = startIndex;
